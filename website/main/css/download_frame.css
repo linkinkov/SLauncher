@@ -1,0 +1,43 @@
+.modal.install-progress {
+    top: 30%;
+}
+.install-progress .progress,
+.install-progress .progress-bar {
+    height: 23px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    text-shadow: 0 1px 0 #429d42;
+}
+.install-progress .progress {
+    box-shadow: none;
+    margin: 8px 0;
+}
+.install-progress .progress-bar {
+    padding-top: 0;
+    font-size: 14px;
+    line-height: 23px;
+}
+.install-progress .modal-content {
+    background: none;
+    box-shadow: none;
+    border-radius: 3px;
+}
+.install-progress .modal-body {
+    padding: 10px;
+    background: none;
+    text-align: center;
+    text-shadow: none;
+    color: #fff;
+    text-shadow: 0 1px 0 rgba(0,0,0,0.3);
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+.install-progress .modal-body .btn {
+    margin-top: 3px;
+}
+.modal-backdrop {
+    opacity: 1 !important;
+    background: rgba(0, 0, 0, 0.6);
+}

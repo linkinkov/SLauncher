@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="content-language" content="ru"/>
+<title>SLauncher</title>
+<link href="./bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+<link href="./font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+<script src="./js/jquery.js"></script>
+<script src="./bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+
+
+<script src="./mustache/mustache.js" type="application/x-javascript"></script>
+<script src="./js/remote_server_api.js" type="application/x-javascript"></script>
+<script src="./js/local_server_api.js" type="application/x-javascript"></script>
+<script src="./js/app.js" type="application/x-javascript"></script>
+<script src="./jquery-ui-1.11.4.custom/jquery-ui.min.js" type="application/javascript"></script>
+<script src="./jqueryslider/slider.js" type="application/javascript"></script>
+<script src="./js/ddslick.js" type="application/javascript"></script>
+<script src="./js/bootstrap-select.min.js"></script>
+<script src="./multiselect/src/listbox.js"></script>
+<link href="./css/bootstrap-select.css" rel="stylesheet" type="text/css"/>
+<link href="./css/css.css?r=5" rel="stylesheet" type="text/css"/>
+<link href="./multiselect/src/listbox.css" rel="stylesheet" type="text/css">
+
+<link href="./jquery-ui-1.11.4.custom/jquery-ui.theme.css" rel="stylesheet" type="text/css"/>
+<link href="./jquery-ui-1.11.4.custom/jquery-ui.css" rel="stylesheet" type="text/css"/>
+<link href="./jqueryslider/pips.css" rel="stylesheet" type="text/css"/>
+
+
+
+
+
+<script type="text/x-mustache" id="versionTemplate">
+          <li data-url="{{url}}" class="version-item"><a href="#" data-url="{{url}}">{{url}}</a></li>
+
+</script>
+
+<script type="text/x-mustache" id="paramTemplate">
+          <li data-url="{{url}}" class="param-item-{{type}}"><a href="#" data-url="{{url}}">{{title}}</a></li>
+
+</script>
+
+<script type="text/x-mustache" id="changedUser">
+         <li class="{{selected}}" name="{{username}}"><a class="one-acc" name="{{username}}" href="#"><i class="fa fa-user"></i>{{username}}<img src="{{img}}" style="padding:0 0 3px 3px"></a></li>
+
+</script>
+
+<script type="text/x-mustache" id="user-button">
+       <span class="current-user-name" >{{username}}<img src="{{img}}" style="padding:0 0 3px 3px"></span>
+
+</script>
+
+<script type="text/x-mustache" id="version-button">
+<span class="current-version-name" id="start_name_version" name="{{version}}" >{{#name}}{{name}}{{/name}}{{^name}}{{version}}{{/name}}</span>
+
+</script>
+<img src="images/favicon.jpg">
+
+<script type="text/x-mustache" id="userTemplate">
+
+     <option class="current-user-name2" data-content='{{username}} <img src="{{img}}">'  value="{{username}}" {{selected}} ></option>
+</script>
+<script type="text/x-mustache" id="version-select">
+    <select name="versions" id="versions" class="form-control"
+                                    style="min-width:100%;margin-top:4px;">
+                                <option  class="install" value="" data-installed="false" disabled="disabled">Установленые версии:</option>
+
+
+                                <option id="not-install" value="" data-installed="false" disabled="disabled">Доступные для
+                                    установки:
+                                </option>
+
+
+                            </select>
+
+</script>
+
+<script type="text/x-mustache" id="user_settings_maincraft">
+
+
+
+                                     <form>
+                                     <div class="container-fluid">
+                                    <div class="form-group">
+                                        <div class="row">
+                                        <div class="col-xs-12 col-lg-12">
+                                        <label for="directory">Путь к папке:</label>
+                                        </div></div>
+                                        <div class="row">
+                                        <div class="col-xs-10 col-lg-10">
+
+                                            <input id="directory" class="form-control" type="text" value="{{directory}}" name="directory">
+
+                                        </div>
+                                        <div class="col-xs-2 col-lg-2">
+                                            <!--<input type="file" webkitdirectory="webkitdirectory" directory="directory" multiple="multiple"/>-->
+                                            <a href="#" class="btn btn-warning form-control change-directory ">Выбрать папку...</a>
+                                        </div>
+                                        </div>
+
+
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="row">
+                                        <div class="col-xs-12 col-lg-12">
+                                        <label>Разрешение:</label>
+                                        </div></div>
+
+                                        <div class="row">
+                                            <div class="col-xs-3 col-lg-3">
+                                                <input class="form-control" type="text" id="weight" value="{{weight}}">
+                                            </div>
+                                            <div class="col-xs-1 col-lg-1" style="text-align: center; vertical-align: middle; padding-top: 4px; padding-left:0px; padding-right:0px; width:15px;">
+                                                X
+                                            </div>
+                                            <div class="col-xs-3 col-lg-3">
+                                                <input class="form-control" type="text" id="height" value="{{height}}">
+                                            </div>
+
+                                        </div>
+                                        <div class="row">
+                                        <div class="col-xs-12 col-lg-12">
+                                            <div class="checkbox" style="">
+                                                <label>
+                                                    <input id="fullscreen" type="checkbox" data-check="{{fullscreen}}" >Полноэкранный
+                                                </label>
+                                            </div>
+                                        </div></div>
+                                    </div>
+
+                                    <hr/>
+                                    <div class="form-group">
+
+                                         <div class="row">
+                                        <div class="col-xs-12 col-lg-12">
+                                        <label>Показывать в списке версий:</label>
+                                          </div></div>
+
+                                        <div class="row"  >
+
+                                            <div class="col-lg-4"  style="padding-left:0px;">
+                                                <div style="">
+                                                    <div class="checkbox">
+                                                        <label>
+                                                            <input id="show_snapshots" type="checkbox" data-check="{{show_snapshots}}">Снапшоты (Snapshots)
+                                                        </label>
+                                                    </div>
+                                                    <div class="checkbox">
+                                                        <label>
+                                                            <input id="show_beta" type="checkbox"  data-check="{{show_beta}}">Бета версии (2010-2011 гг.)
+                                                        </label>
+                                                    </div>
+                                                    <div class="checkbox">
+                                                        <label>
+                                                            <input id="show_alpha" type="checkbox" data-check="{{show_alpha}}">Альфа версии (2010 г.)
+                                                        </label>
+                                                    </div>
+
+
+
+                                                    <div class="checkbox">
+                                                        <label>
+                                                            <input id="show_old_version" type="checkbox" data-check="{{show_old_version}}">Старые релизы (до 1.5.2)
+                                                        </label>
+                                                    </div>
+                                                    <div class="checkbox">
+                                                        <label>
+                                                            <input id="show_mod_version" type="checkbox" data-check="{{show_mod_version}}">Показывать измененные версии
+                                                        </label>
+                                                    </div>
+                                                  </div>
+                                            </div>
+
+                                       </div>
+                                    </div>
+
+                                    <hr/>
+
+
+
+                                    <div class="form-group arguments">
+
+                                           <div class="row">
+                                        <div class="col-xs-12 col-lg-12">
+                                        <label>Аргументы:</label>
+                                        </div></div>
+
+
+                                        <div class="row">
+
+
+                                            <div class="col-xs-6 col-lg-6">
+
+                                                <input id="jvm_arg" class="form-control" type="text" value="{{jvm_arg}}" placeholder="Для JVM (напр.-XX:MaxPermSize=256M)">
+                                            </div>
+
+                                            <div class="col-xs-6 col-lg-6">
+
+                                                 <input id="minecraft_arg" class="form-control" type="text" value="{{minecraft_arg}}" placeholder="Для Minecraft (напр. --server 127.0.0.1)">
+                                            </div>
+
+                                        </div>
+
+
+
+
+                                           <div class="row">
+                                        <div class="col-xs-12 col-lg-12">
+                                        <label for="java_path" style="margin-top: 5px">Команда Запуска:</label>
+                                        </div></div>
+
+                                        <div class="row">
+
+                                            <div class="col-xs-10 col-lg-10">
+                                                <input id="java_path" class="form-control" type="text" value="{{java_path}}" placeholder="Если не указанно будет использоваться путь к Java">
+                                            </div>
+                                            <div class="col-xs-2 col-lg-2">
+                                                <a class="btn btn-warning form-control change-java-path" type="button">Открыть..</a>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <hr/>
+
+
+                                    <div class="form-group ">
+
+                                           <div class="row">
+                                        <div class="col-xs-12 col-lg-12">
+                                        <label for="Memory allocation">Выделяемая память:</label>
+                                        </div></div>
+
+                                        <div class="row">
+                                            <div class="col-xs-3 col-md-3" >
+                                                <input class="form-control" type="text" id="amount"  style="margin-bottom: 10px">
+
+                                            </div>
+
+                                            <div  class="col-xs-9 col-md-9" style=" padding-right:19px;"><div id="slider" style="margin-left:15px; " class="form-control"></div></div>
+
+
+                                        </div>
+
+                                    </div>
+
+
+                                     </div>
+                                </form>
+
+
+
+
+
+</script>
+
+<script type="text/x-mustache" id="user_settings_launch">
+
+
+
+                                    <form>
+
+
+                                    <div class="form-group wide"  >
+                                        <label style="margin-top: 10px;">Консоль разработчика:</label>
+                                        <select id="developer_console" class="form-control wide">
+                                            <option style="weight: 500px" value="none">Нет</option>
+                                            <option value="global">Для всего</option>
+                                            <option value="only Minecraft logger">Только Minecraft логер</option>
+                                        </select>
+                                    </div>
+                                    <br>
+
+
+                                    <div class="form-group" >
+                                        <label style="margin-top:10px;" >Качество подключения:</label>
+                                        <select id="connection_quality" class="form-control wide">
+                                            <option selected value="good">Хорошее</option>
+                                            <option value="normal">Нормальное</option>
+                                            <option value="bad">Плохое</option>
+                                        </select>
+                                    </div>
+                                    <br>
+
+                                    <div class="sel-action" >
+                                        <label style="margin-top:10px;">При запуске Minecraft:</label>
+                                        <select id="action_on_launch" class="form-control wide">
+                                            <option selected value="hide">Скрыть SLauncher</option>
+                                            <option value="nothing">Ничего не делать</option>
+                                        </select>
+                                    </div>
+
+                                    <br>
+
+                                   <!-- <div class="sel-lang">
+                                        <lable for="Language">Language</lable>
+                                        <select id="language" class="form-control">
+                                            <option selected value="en_US">United States</option>
+                                            <option value="ru_RU">Russia</option>
+                                            <option value="uk_UA">Ukraine</option>
+                                        </select>
+                                    </div>-->
+
+                                    <label style="margin-top:10px;">Полная команда:</label>
+                                    <div class="form-group">
+                                        <div class="checkbox">
+                                        <label>
+                                             <input id="full_comand" type="checkbox"  data-check="{{full_comand}}"">
+                                                            Показывать все параметры запуска Minecraft</label>
+                                        </div>
+                                    </div>
+
+
+                                </form>
+
+</script>
+
+<script type="text/x-mustache" id="local-version">
+        <option  value="{{id}}" style="padding: 8px 0px" data-installed="{{installed}}" {{selected}}>{{#name}}{{name}}{{/name}}{{^name}}{{id}}{{/name}}</option>
+
+</script>
+
+<script type="text/x-mustache" id="local-version-button">
+        <li class="{{selected}} versions-button"  name="{{name}}"><a class="on-version-button" name="{{id}}" href="#">{{#name}}{{name}}{{/name}}{{^name}}{{id}}{{/name}}</a></li>
+
+</script>
+<script type="text/x-mustache" id="loader_bar">
+    <p>{{#title}}Подготовка файлов к загрузке ....{{/title}}{{^title}}Загрузка ресурсов игры... осталось {{files}} файл{{ending}}{{/title}}</p>
+                    <div class="progress">
+
+                        <div class="progress-bar progress-bar-success progress-bar-striped active" style="width: {{progress}}%">{{progress}}%</div>
+                    </div>
+</script>
+
+</head>
+<body>
+<div class="modal" id="modalServers" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="content"><form method="post" action="">
+
+                <div class="tab-content">
+                <div role="tabpanel"  class="tab-pane active">
+                    
+
+ <div class="server">
+
+<div class="top" title="AngryWorld"></div>
+            <img src="./images/aw.png" width="50" height="50" alt="" />
+            <a class="title" data-id="1" >AngryWorld 1.8</a>
+            <div class="slogan">BedWars 4x4, SkyWars Team, LuckyBlockWars, Креатив, SkyBlock</br>IP: mc.angryworld.ru:25565</div>
+
+
+            <div class="server-info">
+                <div class="online">
+                    <span>1.8-1.12</span>
+                </div>
+
+                <a class="btn btn-lg btn-warning btn-start-game" version="OptiFine 1.8.9" server_name="AngryWorld" ip="mc.angryworld.ru" ><i class="fa fa-gamepad"></i> Играть</a> 
+            </div>
+        </div>
+
+                
+                <br>
+                      <div class="server">
+
+            <div class="top" title="Forine"></div>
+            <img src="./images/forine.png" width="50" height="50" alt="" />
+            <a class="title" data-id="1" >Forine 1.9</a>
+            <div class="slogan">BedWars 4x4, SkyWars Rating, BlockParty, SplEgg, Зомби-Арена,Креатив, SkyBlock</br>IP: mc.forine.net:25565</div>
+
+
+            <div class="server-info">
+                <div class="online">
+                    <span>1.9, 1.10</span>
+                </div>
+
+                <a class="btn btn-lg btn-warning btn-start-game" version="OptiFine 1.10.2" server_name="Forine" ip="mc.forine.net" ><i class="fa fa-gamepad"></i> Играть</a> 
+            </div>
+        </div>
+
+
+
+                </div>
+
+                        <div role="tabpanel" class="tab-pane active">
+
+                        
+                                
+
+
+                                
+                                <a name="" class="btn btn-primary pull-right" data-dismiss="modal"
+                                        aria-label="Close" style="margin-top:-8px;"><i class="fa fa-times"></i> &nbsp;Закрыть
+                                </a>
+                                <div class="clearfix"></div>
+                            </div>
+
+                        </div>
+
+
+
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Управление аккаунтами -->
+<div class="modal" id="modalAccounts" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="content">
+
+
+                    <ul class="nav nav-tabs">
+                        <li role="presentation" class="active" id="tab-accaunts" style="padding-left:11px;"><a href="#accounts"
+                                                                                             aria-controls="accounts"
+                                                                                             role="tab"
+                                                                                             data-toggle="tab">Мои аккаунты</a></li>
+                        <li id="tab" role="presentation" ><a href="#create" aria-controls="create" role="tab" data-toggle="tab">Создать аккаунт</a></li>
+                    </ul>
+
+                    <div class="tab-content ">
+
+                        <div role="tabpanel" class="tab-pane active accounts-tmp" id="accounts">
+
+                            <form method="post" action="">
+                                <div style="" class="accountsCont">
+                                  <!--  <select id="accounts-select" name="accounts" class="form-control accounts wide" >
+
+                                    </select>-->
+                                </div>
+
+
+
+
+
+                                <a type="button" name="" class="btn btn-success pull-left btn-set-account"
+                                        style="margin:-8px 4px 0 0;"><i class="fa fa-check"></i> &nbsp;Выбрать аккаунт
+                                </a>
+                                <a type="button" name="" class="btn btn-warning pull-left btn-edit-account"
+                                        style="margin:-8px 4px 0 0;"><i class="fa fa-pencil"></i> &nbsp;Изменить аккаунт
+                                </a>
+                                <a type="button" name="" class="btn btn-danger pull-left btn-del-account "
+                                        style="margin:-8px 4px 0 0;" title="Удалить аккаунт"><i
+                                        class="fa fa-trash-o"></i></a>
+                                <a name="" class="btn btn-primary pull-right" data-dismiss="modal"
+                                        aria-label="Close" style="margin-top:-8px;"><i class="fa fa-times"></i> &nbsp;Закрыть
+                                </a>
+                                <div class="clearfix"></div>
+                            </form>
+
+                        </div>
+
+                        <div role="tabpanel" class="tab-pane" id="create">
+
+                            <form id="create-new" method="post" action="">
+                                <div class="form-group">
+                                    <label for="user_nick" id="pay-acc"> Имя пользователя или E-Mail:</label>
+                                    <label for="user_nick" id="no-pass"> Имя пользователя:</label>
+                                    <input type="text" class="form-control" id="user_nick"
+                                           placeholder="Например, SLauncher" />
+                                </div>
+                                <div class="radio">
+                                    <label><input type="radio" name="password_type" id="password_no" value="no"
+                                                  checked="checked"/> Без пароля</label>
+                                </div>
+                                <div class="radio">
+                                    <label><input type="radio" name="password_type" id="password_mojang"
+                                                  value="mojang"/> Пароль на Mojang.com</label>
+                                </div>
+
+                                <div class="form-group password-field">
+                                    <input type="password" class="form-control hidden" id="user_pass_mojang" placeholder="Введите пароль на Mojang.com" required/>
+                                </div>
+
+                                <hr/>
+                                <a type="button" class="btn btn-success btn-create-account"><i
+                                        class="fa fa-check"></i> &nbsp;Создать аккаунт&nbsp;</a>
+                                <a type="button" class="btn btn-success btn-save-account"><i
+                                        class="fa fa-check"></i> &nbsp;Сохранить аккаунт&nbsp;</a>
+                                <a type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close"><i
+                                        class="fa fa-times"></i> &nbsp;Закрыть&nbsp;</a>
+                                <hr/>
+                                <div class="alert alert-success" id="account_no">
+                                    Использование <strong>бесплатных аккаунтов</strong> позволяет играть бесплатно и без
+                                    премиум-аккаунта. Вы можете играть в одиночной игре и на пиратских серверах. <a
+                                        href="https://minecraft.net/store/minecraft" target="_blank">приобретите
+                                    премиум-аккаунт</a>.
+                                </div>
+                                <div class="alert alert-success" id="account_mojang" style="display:none;">
+                                    <strong>Премиум-аккаунты (Аккаунты Mojang)</strong> позволяют играть на официальных
+                                    серверах и видеть скины без дополнительной модификации клиента. Вы можете приобрести
+                                    его на <a  href="https://minecraft.net/store/minecraft"
+                                              target="_blank">Minecraft.net</a>.
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Управление версиями -->
+<div class="modal" id="modalVersions" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" style="width:600px;">
+        <div class="modal-content"  style="width:600px;">
+            <div class="modal-header">
+                <h4 class="modal-title">Управление версиями</h4>
+            </div>
+            <div class="modal-body">
+                <div class="content">
+
+                    <form method="post" action="">
+                        <div class="version-select">
+
+                            <select name="versions" id="versions" class="form-control"
+                                    style="min-width:100%;margin-top:4px;">
+                                <option class="install" value="" disabled="disabled">Установленые версии:</option>
+
+
+                                <option id="not-install" value="" data-installed="false" disabled="disabled">Доступные для
+                                    установки:
+                                </option>
+
+
+                            </select>
+                        </div>
+
+                        <br/>
+                        <a href="#" class="btn btn-success pull-left" style="display:none;margin:-8px 4px 0 0;"
+                           id="button_update1"><i class="fa fa-refresh"></i> &nbsp; Обновить игру </a>
+                        <a href="#" class="btn  btn-success pull-left" style="display:none;margin:-8px 4px 0 0;"
+                           id="button_install"><i class="fa fa-download"></i> &nbsp; Установить игру </a>
+                        <a href="#" class="btn btn-warning pull-left" style="display:none;margin:-8px 4px 0 0;"
+                           id="button_reinstall"><i class="fa fa-wrench"></i> &nbsp; Переустановить </a>
+                        <a href="#" class="btn btn-danger pull-left" style="display:none;margin:-8px 4px 0 0;"
+                           id="button_remove"><i class="fa fa-trash-o"></i> &nbsp; Удалить </a>
+                        <a class="btn btn-primary pull-right" data-dismiss="modal" aria-label="Close"
+                           style="margin-top:-8px;margin-bottom:0px;"><i class="fa fa-times"></i> &nbsp;Закрыть</a>
+
+                        <div class="clearfix"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Настройки -->
+<div class="modal" id="modalSettings" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" >
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="content">
+                    <form method="post" action="">
+                        <ul class="nav nav-tabs" style="margin: 0 -12px;">
+                            <li role="presentation" class="active start-minecrafr" style="padding-left:11px;"><a href="#launch"
+                                                                                                 aria-controls="launch"
+                                                                                                 role="tab"
+                                                                                                 data-toggle="tab">Запуск
+                                Minecraft</a></li>
+                            <li role="presentation" class="mrlauncher-settings"><a href="#settings" aria-controls="settings" role="tab"
+                                                       data-toggle="tab">Настройки SLauncher</a></li>
+                            <li role="presentation" class="about"><a href="#about" aria-controls="about" role="tab" data-toggle="tab">О
+                                программе</a></li>
+                        </ul>
+                        <div class="tab-content">
+
+                            <div role="tabpanel" class="tab-pane active" id="launch">
+
+
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="settings">
+
+
+                            </div>
+                            <div role="tabpanel" class="tab-pane " id="about" style="color: #444;">
+                                <p style="display:block;padding:4px 0;background:#5db85d;text-align:center;border-radius:2px;margin-bottom:15px;">
+                                    <img src="images/logo.png" alt=""/></p>
+
+                                <p><strong>SLauncher</strong> один из лучших альтернативных свободных лаунчеров для
+                                    Minecraft от <a id="maincraft_site" href="#"
+                                                    target="_blank">Spark1337</a></p>
+
+                                <p><strong>Наша миссия</strong> - познакомить как можно больше людей с данной игрой.</p>
+
+                                <p>Если Вы с нами, то помогите распространить эту программу для всех желающих!</p>
+
+                                <p>И подписывайтесь на нас <a id="maincraft_vk" href="#"
+                                                              target="_blank">ВКонтакте</a>.</p>
+
+                                <div class="clearfix"></div>
+
+                                <!-- <button name="" class="btn btn-primary pull-right" data-dismiss="modal" aria-label="Close" style="margin:0 0 0 0;"><i class="fa fa-times"></i> &nbsp; Закрыть</button>-->
+                            </div>
+
+                        </div>
+                        <div class="clearfix"></div>
+                    </form>
+                </div>
+
+
+            </div>
+            <div class="modal-footer">
+                <a name="" class="btn btn-success pull-left btn-save-settings my-btn" style="margin:0 4px 0 0;"
+                        id="button_update2"><i class="fa fa-check"></i> &nbsp; Сохранить
+                </a>
+                <a name="" class="btn btn-warning pull-left set-default-setting" style="margin:0 4px 0 0;"
+                        id="button_update3"><i class="fa fa-refresh"></i> &nbsp; По умолчанию
+                </a>
+                <a name="" class="btn btn-primary pull-right" data-dismiss="modal"
+                        aria-label="Close" style="margin: 0; border:hidden"><i class="fa fa-times"></i> &nbsp; Закрыть
+                </a>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="wrapper-main" style="background-color: #F7F5F4;">
+
+    <!-- Header -->
+    <div class="header">
+
+        <img src="images/logo.png" class="logo" alt=""/>
+
+        <div class="account">
+
+            
+            <a class="btn btn-default" title="Открыть папку с игрой" id="open_folder"><i class="fa fa-folder supp-btn"></i></a>
+
+            <a href="#" target="_blank" class="btn btn-default" id="vkButton" title="Мы ВКонтакте"><i
+                    class="fa fa-vk supp-btn"></i></a>
+            <a href="#" target="_blank" class="btn btn-default" title="Тех. поддержка" id="tech_support">
+                <i class="fa fa-support "></i>Тех. поддержка </a>
+            <a class="btn btn-default" title="Настройки" id="show_settings"><i class="fa fa-cog"></i> Настройки
+            </a>
+            <a class="btn btn-default" title="Сервера" id="show_servers"><i class="fa fa-server"></i> Сервера
+            </a>
+
+        </div>
+
+        <div class="header-separator"></div>
+
+        <div class="account">
+
+            <div class="dropdown ">
+                <a class="btn btn-default dropdown-toggle " type="button" id="changeUser"  data-toggle="dropdown">
+                    <i class="fa fa-user"></i> <div class="current-user-name">SLauncher</div>
+                    <span class="caret"></span>
+                </a>
+
+                <ul class="dropdown-menu  user-acc" aria-labelledby="changeUser">
+
+
+                    <li class="change-account"><a href="#" id="change_account"><i class="fa fa-cog"></i> Сменить аккаунт</a>
+                    </li>
+                </ul>
+
+
+            </div>
+
+            <div class="btn-group" role="group">
+                <a class="btn btn-default start-game " style="border-radius:2px;" title="Запустить игру"><i class="fa fa-gamepad"></i> Начать играть
+                </a>
+                <div class="btn-group version-game"  role="group">
+                    <a type="button" class="btn btn-default dropdown-toggle " style="border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-left: 1px solid #ccc ; " data-toggle="dropdown">
+                        <span class="current-version-name"></span>
+                        &nbsp;<span class="caret "></span>
+                    </a>
+                    <ul class="dropdown-menu version-game">
+
+                        <li><a href="#" id="manage_versions" style="background: #eee;border-top: 1px solid #ddd;"><i class="fa fa-bars"></i> Управление версиями</a></li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+    <div class="versions" style="background-color: #F7F5F4; float:right;text-align: center;">
+    <img src="1.12.png">
+    </div>
+
+
+   <div class="progress loading-bar" style="visibility: hidden;">
+        <div class="progress-bar progress-bar-striped progress-bar-success active" style="width: 80%">
+            Загрузка ресурсов игры ...
+        </div>
+    </div>
+
+
+
+
+
+</div>
+
+
+<script src="js/theme.js" type="text/javascript"></script>
+
+
+
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function (d, w, c) {
+        (w[c] = w[c] || []).push(function() {
+            try {
+                w.yaCounter44565321 = new Ya.Metrika({
+                    id:44565321,
+                    clickmap:true,
+                    trackLinks:true,
+                    accurateTrackBounce:true,
+                    webvisor:true,
+                    trackHash:true,
+                    ut:"noindex"
+                });
+            } catch(e) { }
+        });
+
+        var n = d.getElementsByTagName("script")[0],
+            s = d.createElement("script"),
+            f = function () { n.parentNode.insertBefore(s, n); };
+        s.type = "text/javascript";
+        s.async = true;
+        s.src = "https://mc.yandex.ru/metrika/watch.js";
+
+        if (w.opera == "[object Opera]") {
+            d.addEventListener("DOMContentLoaded", f, false);
+        } else { f(); }
+    })(document, window, "yandex_metrika_callbacks");
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/44565321?ut=noindex" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+</body>
+</html>

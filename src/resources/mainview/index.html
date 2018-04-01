@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="content-language" content="ru" />
+    <title>MRLauncher &mdash; Prototype</title>
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <script src="js/jquery.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+
+    <script src="js/spin.min.js" type="text/javascript"></script>
+    <script src="mustache/mustache.js" type="application/x-javascript"></script>
+    <script src="js/remote_server_api.js" type="application/x-javascript"></script>
+    <script src="js/local_server_api.js" type="application/x-javascript"></script>
+    <script src="js/app.js" type="application/x-javascript"></script>
+    <script src="jquery-ui-1.11.4.custom/jquery-ui.min.js" type="application/javascript"></script>
+    <link href="css/css.css?r=1" rel="stylesheet" type="text/css" />
+
+    <link href="jquery-ui-1.11.4.custom/jquery-ui.theme.css" rel="stylesheet" type="text/css" />
+    <link href="jquery-ui-1.11.4.custom/jquery-ui.css" rel="stylesheet" type="text/css" />
+
+
+    <script type="text/x-mustache" id="serverTemplate">
+         <div class="server server-{{color}}">
+            <div class="top" title="{{name}}">{{top}}</div>
+            <img src="https://i.gyazo.com/f5e1445c9432ef3f9a1f23ef978a5f4e.png" width="50" height="50" alt="" />
+            <a href="#" class="title">{{name}}</a>
+            <div class="slogan"> <<{{slogan}}>>{{ip}} ip: [ mc.angryworld.ru ]</div>
+            <span>{{rating}} баллов</span>
+            <a href="#" class="btn btn-xs btn-danger up-top-button" data-id="{{id}}" target="_blank"><i class="fa fa-star"></i> поднять в топ</a>
+            <a href="#" class="btn btn-xs btn-primary set-color-button" data-id="{{id}}" target="_blank"><i class="fa fa-paint-brush"></i> выделить цветом</a>
+            &nbsp;&nbsp;
+            <span>{{votes}} голоса</span>
+            <a href="#" class="btn btn-xs btn-success like-button data-id="{{id}}" target="_blank"><i class="fa fa-thumbs-up"></i> проголосовать</a>
+            <a href="#" class="btn btn-xs btn-warning bay-donat-button data-id="{{id}}" target="_blank"><i class="fa fa-rub"></i> купить донат</a>
+
+            <div class="server-info">
+                <div class="online">
+                    <span>{{players}} из {{max_players}}</span>
+                    <span>{{version}}</span>
+                </div>
+                <button class="btn btn-lg btn-warning btn-start-game" version="{{version}}" server_name="{{name}}" ip="{{ip}}" ><i class="fa fa-gamepad"></i> Играть</button>
+            </div>
+        </div>
+    </script>
+
+
+    <script type="text/x-mustache" id="versionTemplate">
+          <li data-url="{{url}}"><a href="#" data-url="{{url}}">{{url}}</a></li>
+    </script>
+
+    <script type="text/x-mustache" id="paramTemplate">
+          <li data-url="{{url}}"><a href="#" data-url="{{url}}">{{title}}</a></li>
+    </script>
+
+    <script type="text/x-mustache" id="changedUser">
+         <li class="{{selected}}" name="{{username}}"><a class="one-acc" name="{{username}}" href="#"><i class="fa fa-user"></i>{{username}}</a></li>
+    </script>
+
+    <script type="text/x-mustache" id="user-button">
+<span class="current-user-name" >{{username}}</span>
+    </script>
+
+    <script type="text/x-mustache" id="userTemplate">
+         <option class="current-user-name2" value="{{username}}">{{username}}</option>
+
+    </script>
+    <script type="text/x-mustache" id="user_settings_maincraft">
+
+
+
+
+
+                                <div class="form-group ">
+                                    <div>
+                                        <lable for="Directory">Directory</lable>
+                                        <input type="file" webkitdirectory="webkitdirectory" directory="directory" multiple="multiple"/>
+                                        <input id="directory" class="form-control" type="text" value="{{directory}}" name="directory">
+                                    </div>
+                                    <div>
+                                        <div>
+                                            <lable>Resolution</lable>
+                                            <input class="form-control" type="text" id="weight" value="{{weight}}">
+                                            <input class="form-control" type="text" id="height" value="{{height}}">
+                                        </div>
+                                        <div class="checkbox" style="margin-left: 20px">
+                                            <lable>
+                                                <input id="fullscreen" type="checkbox" data-check="{{fullscreen}}" >Fullscreen
+                                            </lable>
+                                        </div>
+                                    </div>
+                                </div><hr/>
+                                <div class="form-group" style="margin-left: 20px"> Version:
+                                    <div class="checkbox">
+                                        <lable>
+                                            <input id="show_snapshots" type="checkbox" data-check="{{show_snapshots}}">Show Snapshots
+                                        </lable>
+                                    </div>
+                                    <div class="checkbox">
+                                        <lable>
+                                            <input id="show_beta" type="checkbox"  data-check="{{show_beta}}">Show Beta
+                                        </lable>
+                                    </div>
+                                    <div class="checkbox">
+                                        <lable>
+                                            <input id="show_alpha" type="checkbox" data-check="{{show_alpha}}">Show Alpha
+                                        </lable>
+                                    </div>
+                                    <div class="checkbox">
+                                        <lable>
+                                            <input id="show_old_version" type="checkbox" data-check="{{show_old_version}}">Show Old version(before 1.5.2)
+                                        </lable>
+                                    </div>
+                                    <div class="checkbox">
+                                        <lable>
+                                            <input id="show_mod_version" type="checkbox" data-check="{{show_mod_version}}">Show modified version
+                                        </lable>
+                                    </div>
+
+                                </div><hr/>
+                                <br>
+
+
+                                <div class="form-group arguments">
+                                    <div>
+                                        <lable>Arguments</lable>
+                                        <input id="jvm_arg" class="form-control" type="text" value="{{jvm_arg}}" placeholder="JVM arguments (e.g.-XX:MaxPermSize=256M)">
+                                        <input id="minecraft_arg" class="form-control" type="text" value="{{minecraft_arg}}" placeholder="Minecraft arguments (e.g. --server 127.0.0.1)">
+                                    </div>
+                                    <div>
+                                        <lable for="Java Path">Java Path</lable>
+                                       <input id="java_path" class="form-control" type="text" value="{{java_path}}" placeholder="A path to 'bin' folder(in Windows:to 'java')">
+                                        <button class="btn-default" type="button">Browse..</button>
+                                    </div>
+                                </div><hr/>
+                                <div class="col-md-8 col-md-offset-2" >
+
+                                    <lable for="Memory allocation">Memory allocation</lable>
+
+
+                                    <input class="form-control" type="text" id="amount"  style="margin-bottom: 10px">
+
+
+                                    <div id="slider"></div>
+
+                                </div>
+
+
+
+   </script>
+                            <script type="text/x-mustache" id="user_settings_launch">
+
+
+
+                                <div>
+                                    <div class="sel-consol" >
+                                        <lable for="Developer console">Developer console</lable>
+                                        <select id="developer_console">
+                                            <option value="none">None</option>
+                                            <option value="global">Global</option>
+                                            <option value="only Minecraft logger">Only Minecraft logger</option>
+                                        </select>
+                                    </div>
+                                    <br>
+
+                                    <div class="sel-connection">
+                                        <lable for="Connection quality">Connection quality</lable>
+                                        <select id="connection_quality">
+                                            <option selected value="good">Good</option>
+                                            <option value="normal">Normal</option>
+                                            <option value="bad">Bad</option>
+                                        </select>
+                                    </div>
+                                    <br>
+
+                                    <div class="sel-action">
+                                        <lable for="Action on Launch">Action on Launch</lable>
+                                        <select id="action_on_launch">
+                                            <option selected value="hide">Hide Tlauncher</option>
+                                            <option value="close">Close Tlauncher</option>
+                                            <option value="nothing">Do nothing</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <br>
+
+                                <div class="sel-lang">
+                                    <lable for="Language">Language</lable>
+                                    <select id="language">
+                                        <option selected value="en_US">United States</option>
+                                        <option value="ru_RU">Russia</option>
+                                        <option value="uk_UA">Ukraine</option>
+                                    </select>
+                                </div>
+
+
+
+
+
+
+
+    </script>
+
+</head>
+<body>
+
+<!-- Управление аккаунтами -->
+<div class="modal" id="modalAccounts" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="content">
+
+
+                    <ul class="nav nav-tabs" >
+                        <li role="presentation" class="active" style="padding-left:11px;"><a href="#accounts" aria-controls="accounts" role="tab" data-toggle="tab">Мои аккаунты</a></li>
+                        <li id="tab" role="presentation"><a href="#create" aria-controls="create" role="tab" data-toggle="tab">Создать аккаунт</a></li>
+                    </ul>
+
+                    <div class="tab-content">
+
+                        <div role="tabpanel" class="tab-pane active" id="accounts">
+
+                            <form method="post" action="">
+
+                                 <select name="accounts" class="form-control accounts" style="min-width:100%;">
+
+                                 </select>
+
+
+
+                                <br />
+                                <button type="button" name="" class="btn btn-success pull-left btn-set-account" style="margin:-8px 4px 0 0;"><i class="fa fa-check"></i> &nbsp;Выбрать аккаунт</button>
+                                <button type="button" name="" class="btn btn-warning pull-left btn-edit-account" style="margin:-8px 4px 0 0;"><i class="fa fa-pencil"></i> &nbsp;Изменить аккаунт</button>
+                                <button name="" class="btn btn-danger pull-left btn-del-account " style="margin:-8px 4px 0 0;" title="Удалить аккаунт"><i class="fa fa-trash-o"></i></button>
+                                <button name="" class="btn btn-primary pull-right" data-dismiss="modal" aria-label="Close" style="margin-top:-8px;"><i class="fa fa-times"></i> &nbsp;Закрыть</button>
+                                <div class="clearfix"></div>
+                            </form>
+
+                        </div>
+
+                        <div role="tabpanel" class="tab-pane" id="create">
+
+                            <form id="create-new" method="post" action="">
+                                <div class="form-group">
+                                    <label for="user_nick">Имя пользователя:</label>
+                                    <input type="text" class="form-control" id="user_nick" placeholder="Например, MRLauncher" />
+                                </div>
+                                <div class="radio">
+                                    <label><input type="radio" name="password_type" id="password_no" value="no" checked="checked" /> Без пароля</label>
+                                </div>
+                                <div class="radio">
+                                    <label><input type="radio" name="password_type" id="password_mojang" value="mojang" /> Пароль на Mojang.com</label>
+                                </div>
+                                <div class="radio">
+                                    <label><input type="radio" name="password_type" id="password_ely" value="ely" /> Пароль на Ely.by</label>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control hidden" id="user_pass_mojang" placeholder="Введите пароль на Mojang.com" />
+                                    <input type="text" class="form-control hidden" id="user_pass_ely" placeholder="Введите пароль на Ely.by" />
+                                </div>
+                                <hr />
+                                <button type="button" class="btn btn-success btn-save-account"><i class="fa fa-check"></i> &nbsp;Создать аккаунт&nbsp;</button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close"><i class="fa fa-times"></i> &nbsp;Закрыть&nbsp;</button>
+                                <hr />
+                                <div class="alert alert-success" id="account_no">
+                                    Использование <strong>бесплатных аккаунтов</strong> позволяет играть бесплатно и без премиум-аккаунта. Вы можете играть в одиночной игре и на пиратских серверах. Чтобы видеть скины используйте аккаунт Ely или приобритите <a href="https://minecraft.net/store/minecraft" target="_blank">приобретите премиум-аккаунт</a>.
+                                </div>
+                                <div class="alert alert-success" id="account_mojang" style="display:none;">
+                                    <strong>Премиум-аккаунты (Аккаунты Mojang)</strong> позволяют играть официальных серверах и видеть скины без дополнительной модификации клиента. Вы можете приобрести его на <a href="https://minecraft.net/store/minecraft" target="_blank">Minecraft.net</a>.
+                                </div>
+                                <div class="alert alert-success" id="account_ely" style="display:none;">
+                                    <strong>Аккаунт Ely</strong>, в отличии от бесплатного, позволяет видеть скины игроков, зарегистрированных в этой системе. Для использования необходимо <a href="http://ely.by/" target="_blank">зарегистрироваться</a>.
+                                </div>
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Управление версиями -->
+<div class="modal" id="modalVersions" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Управление версиями</h4>
+            </div>
+            <div class="modal-body">
+                <div class="content">
+                    <form method="post" action="">
+                        <select name="versions" id="versions" multiple="multiple" class="form-control multiple" style="min-width:100%;margin-top:4px;">
+                            <option value="" disabled="disabled">Установленые версии:</option>
+                            <option value="" data-installed="true" data-new-update="true" selected="selected">Версия 1.9 (Есть обновление)</option>
+                            <option value="" data-installed="true">Версия 1.8.9</option>
+                            <option value="" data-installed="true">Снапшот 1.9-pre1</option>
+
+                            <option value="" data-installed="no" disabled="disabled">Доступные для установки:</option>
+                            <option value="" data-installed="no">Снапшот 1.9-pre4</option>
+                            <option value="" data-installed="no">Снапшот 1.9-pre3</option>
+                            <option value="" data-installed="no">Снапшот 1.9-pre2</option>
+                            <option value="" data-installed="no">Снапшот 1.9-pre1</option>
+                            <option value="" data-installed="no">Снапшот 16w06a</option>
+                            <option value="" data-installed="no">Снапшот 16w05b</option>
+                            <option value="" data-installed="no">Снапшот 16w04a</option>
+                        </select>
+                        <br />
+                        <button name="" class="btn btn-success pull-left" style="display:none;margin:-8px 4px 0 0;" id="button_update1"><i class="fa fa-refresh"></i> &nbsp; Обновить игру </button>
+                        <button name="" class="btn  btn-success pull-left" style="display:none;margin:-8px 4px 0 0;" id="button_install"><i class="fa fa-download"></i> &nbsp; Установить игру </button>
+                        <button name="" class="btn btn-warning pull-left" style="display:none;margin:-8px 4px 0 0;" id="button_reinstall"><i class="fa fa-wrench"></i> &nbsp; Переустановить </button>
+                        <button name="" class="btn btn-danger pull-left" style="display:none;margin:-8px 4px 0 0;" id="button_remove"><i class="fa fa-trash-o"></i> &nbsp; Удалить </button>
+                        <button name="" class="btn btn-primary pull-right" data-dismiss="modal" aria-label="Close" style="margin-top:-8px;margin-bottom:0px;"><i class="fa fa-times"></i> &nbsp;Закрыть</button>
+                        <div class="clearfix"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- Настройки -->
+<div class="modal" id="modalSettings" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" style="width: 1000px;">
+        <div class="modal-content" style="width: 1000px;">
+            <div class="modal-body">
+                <div class="content">
+                    <form method="post" action="">
+                        <ul class="nav nav-tabs" style="margin: 0 -12px;">
+                            <li role="presentation" class="active" style="padding-left:11px;"><a href="#launch"
+                                                                                                 aria-controls="launch"
+                                                                                                 role="tab"
+                                                                                                 data-toggle="tab">Запуск
+                                Minecraft</a></li>
+                            <li role="presentation"><a href="#settings" aria-controls="settings" role="tab"
+                                                       data-toggle="tab">Настройки MRLauncher</a></li>
+                            <li role="presentation"><a href="#about" aria-controls="about" role="tab" data-toggle="tab">О
+                                программе</a></li>
+                        </ul>
+                        <div class="tab-content">
+
+                            <div role="tabpanel" class="tab-pane active" id="launch">
+
+                                <!--<div class="form-group">
+                                   <div>
+                                        <lable for="Directory">Directory</lable>
+                                        <input type="file" webkitdirectory="webkitdirectory" directory="directory" multiple="multiple"/>
+                                        <input id="directory" class="form-control" type="text" name="directory">
+                                    </div>
+                                    <div>
+                                        <div>
+                                            <lable>Resolution</lable>
+                                            <input class="form-control" type="text" id="weight" value="925">
+                                            <input class="form-control" type="text" id="height" value="530">
+                                        </div>
+                                        <div class="checkbox" style="margin-left: 20px">
+                                            <lable>
+                                                <input id="fullscreen" type="checkbox" checked="false">Fullscreen
+                                            </lable>
+                                        </div>
+                                    </div>
+                                </div><hr/>
+                                <div class="form-group" style="margin-left: 20px"> Version:
+                                    <div class="checkbox">
+                                        <lable>
+                                            <input id="show_snapshots" type="checkbox" checked="checked">Show Snapshots
+                                        </lable>
+                                    </div>
+                                    <div class="checkbox">
+                                        <lable>
+                                            <input id="show_beta" type="checkbox" checked="checked">Show Beta
+                                        </lable>
+                                    </div>
+                                    <div class="checkbox">
+                                        <lable>
+                                            <input id="show_alpha" type="checkbox" checked="checked">Show Alpha
+                                        </lable>
+                                    </div>
+                                    <div class="checkbox">
+                                        <lable>
+                                            <input id="show_old_version" type="checkbox" checked="checked">Show Old version(before 1.5.2)
+                                        </lable>
+                                    </div>
+                                    <div class="checkbox">
+                                        <lable>
+                                            <input id="show_mod_version" type="checkbox" checked="checked">Show modified version
+                                        </lable>
+                                    </div>
+
+                                </div><hr/>
+                                <br>
+
+
+                                <div class="form-group">
+                                    <div>
+                                        <lable>Arguments</lable>
+                                        <input id="jvm_arg" class="form-control" type="text" placeholder="JVM arguments (e.g.-XX:MaxPermSize=256M)">
+                                        <input id="minecraft_arg" class="form-control" type="text" placeholder="Minecraft arguments (e.g. --server 127.0.0.1)">
+                                    </div>
+                                    <div>
+                                        <lable for="Java Path">Java Path</lable>
+                                       <input id="java_path" class="form-control" type="text" placeholder="A path to 'bin' folder(in Windows:to 'java')">
+                                        <button class="btn-default" type="button">Browse..</button>
+                                    </div>
+                                </div><hr/>
+                                <div class="col-md-8 col-md-offset-2" >
+
+                                    <lable for="Memory allocation">Memory allocation</lable>
+
+
+                                    <input class="form-control" type="text" id="amount" readonly style="margin-bottom: 10px">
+
+
+                                    <div id="slider"></div>
+
+                                </div>-->
+
+
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="settings">
+
+
+                                <!--<div>
+                                    <div>
+                                        <lable for="Developer console">Developer console</lable>
+                                        <select id="developer_console">
+                                            <option selected value="None">None</option>
+                                            <option value="Global">Global</option>
+                                            <option value="Only Minecraft logger">Only Minecraft logger</option>
+                                        </select>
+                                    </div>
+                                    <br>
+
+                                    <div>
+                                        <lable for="Connection quality">Connection quality</lable>
+                                        <select id="connection_quality">
+                                            <option selected value="Good">Good</option>
+                                            <option value="Normal">Normal</option>
+                                            <option value="Bad">Bad</option>
+                                        </select>
+                                    </div>
+                                    <br>
+
+                                    <div>
+                                        <lable for="Action on Launch">Action on Launch</lable>
+                                        <select id="action_on_launch">
+                                            <option selected value="Hide Tlauncher">Hide Tlauncher</option>
+                                            <option value="Close Tlauncher">Close Tlauncher</option>
+                                            <option value="Do nothing">Do nothing</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <br>
+
+                                <div>
+                                    <lable for="Language">Language</lable>
+                                    <select id="language">
+                                        <option selected value="en_US">United States</option>
+                                        <option value="ru_RU">Russia</option>
+                                        <option value="uk_UA">Ukraine</option>
+                                    </select>
+                                </div>-->
+
+
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="about" style="color: #444;">
+                                <p style="display:block;padding:4px 0;background:#5db85d;text-align:center;border-radius:2px;margin-bottom:15px;"><img src="images/logo.png" alt="" /></p>
+                                <p><strong>MRLauncher 1.1</strong> один из лучших альтернативных свободных лаунчеров для Minecraft от <a href="http://minecraftrating.ru/" target="_blank">MinecraftRating.ru</a></p>
+                                <p><strong>Наша миссия</strong> - познакомить как можно больше людей с данной игрой.</p>
+                                <p>Если Вы с нами, то помогите распространить эту программу для всех желающих!</p>
+                                <p>И подписывайтесь на нас <a href="https://vk.com/rating_minecraft_servera" target="_blank">ВКонтакте</a>.</p>
+                                <div class="clearfix"></div>
+                                <hr />
+                             <!-- <button name="" class="btn btn-primary pull-right" data-dismiss="modal" aria-label="Close" style="margin:0 0 0 0;"><i class="fa fa-times"></i> &nbsp; Закрыть</button>-->
+                            </div>
+
+                        </div>
+                        <div class="clearfix"></div>
+                    </form>
+                </div>
+
+
+            </div>
+            <div class="modal-footer">
+                <button name="" class="btn btn-success pull-left btn-save-settings" style="margin:0 4px 0 0;"
+                        id="button_update2"><i class="fa fa-check"></i> &nbsp; Сохранить
+                </button>
+                <button name="" class="btn btn-warning pull-left set-default-setting" style="margin:0 4px 0 0;"
+                        id="button_update3"><i class="fa fa-refresh"></i> &nbsp; По умолчанию
+                </button>
+                <button name="" class="btn btn-primary pull-right" data-dismiss="modal"
+                        aria-label="Close" style="margin: 0;"><i class="fa fa-times"></i> &nbsp; Закрыть
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="wrapper-main">
+
+    <!-- Header -->
+    <div class="header">
+
+        <img src="images/logo.png" class="logo" alt="" />
+
+        <div class="account">
+
+            <button class="btn btn-default" title="Обновить список серверов"><i class="fa fa-refresh"></i></button>
+            <button class="btn btn-default" title="Открыть папку с игрой" id="open_folder"><i class="fa fa-folder"></i></button>
+
+            <a href="#" target="_blank" class="btn btn-default" id="vkButton" title="Мы ВКонтакте"><i class="fa fa-vk"></i></a>
+            <a href="#" target="_blank" class="btn btn-default" title="Добавить сервер" id="addServer" ><i class="fa fa-plus"></i> Добавить сервер</a>
+            <button class="btn btn-default" title="Настройки" id="show_settings" ><i class="fa fa-cog"></i> Настройки</button>
+
+        </div>
+
+        <div class="header-separator"></div>
+
+        <div class="account">
+
+            <div class="dropdown " >
+                <button class="btn btn-default dropdown-toggle " type="button" id="changeUser" data-toggle="dropdown" >
+                    <i class="fa fa-user"></i> &nbsp;<span class="current-user-name" >Rubaha</span>
+                    <span class="caret"></span>
+                </button>
+
+                <ul class="dropdown-menu  user-acc" aria-labelledby="changeUser">
+
+                    <li class=""><a href="#"><i class="fa fa-user"></i> Rubaha</a></li>
+                    <li class="change-account" ><a href="#"  id="change_account" ><i class="fa fa-cog"></i> Сменить аккаунт</a></li>
+                </ul>
+
+
+            </div>
+
+            <div class="btn-group" role="group">
+                <button class="btn btn-default" title="Запустить игру"><i class="fa fa-gamepad"></i> Начать играть</button>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        Версия 1.9 &nbsp;<span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li class="active"><a href="#">Версия 1.9</a></li>
+                        <li><a href="#">ForgeLiteLoader 1.8.9</a></li>
+                        <li><a href="#">Forge 1.7.2</a></li>
+                        <li><a href="#">OptiFine 1.5.2</a></li>
+                        <li><a href="#">Версия 1.2.3</a></li>
+                        <li><a href="#" id="manage_versions" style="background: #eee;border-top: 1px solid #ddd;"><i class="fa fa-bars"></i> Управление версиями</a></li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="clearfix"></div>
+
+    </div>
+
+    <!-- Versions -->
+    <div class="versions">
+
+        <ul>
+            <li>Выбрать версию:</li>
+            <li class="active" data-url="all"><a href="#" data-url="all">Все версии</a></li>
+            <!--<li><a href="#">1.9.*</a></li>
+            <li><a href="#">1.8.*</a></li>
+            <li><a href="#">1.7.*</a></li>
+            <li><a href="#">1.6.*</a></li>
+            <li><a href="#">1.5.*</a></li>-->
+        </ul>
+        <div class="clearfix"></div>
+
+    </div>
+
+    <!-- Params search -->
+    <div class="search">
+
+        <ul class="category main" >
+            <li><span href="#" class="label label-success">Основное</span></li>
+        </ul>
+
+       <!-- <ul>
+            <li class="active"><a href="#">Все сервера</a></li>
+            <li><a href="#">Выживание</a></li>
+            <li><a href="#">Креатив</a></li>
+            <li><a href="#">Дюп</a></li>
+            <li><a href="#">Без дюпа</a></li>
+        </ul>
+        <ul>
+            <li><a href="#">1000 лвл</a></li>
+            <li><a href="#">Лицензия</a></li>
+            <li><a href="#">Пиратские</a></li>
+            <li><a href="#">PVP</a></li>
+            <li><a href="#">Без PVP</a></li>
+        </ul>
+        <ul>
+            <li><a href="#">Донат</a></li>
+            <li><a href="#">Без доната</a></li>
+            <li><a href="#">Приват</a></li>
+            <li><a href="#">Без привата</a></li>
+            <li><a href="#">RPG</a></li>
+        </ul>
+        <ul>
+            <li><a href="#">Кланы</a></li>
+            <li><a href="#">127 лвл</a></li>
+            <li><a href="#">Херобрин</a></li>
+            <li><a href="#">Тюрьма</a></li>
+            <li><a href="#">Fly</a></li>
+        </ul>
+        <ul>
+            <li><a href="#">Свадьбы</a></li>
+            <li><a href="#">PVE</a></li>
+            <li><a href="#">Экономика</a></li>
+            <li><a href="#">С оружием</a></li>
+            <li><a href="#">Ивенты</a></li>
+        </ul>-->
+
+
+        <ul class="category mini-games">
+            <li><span href="#" class="label label-success">Мини-игры</span></li>
+        </ul>
+
+
+       <!-- <ul>
+            <li><a href="#">Голодные игры</a></li>
+            <li><a href="#">Bed Wars</a></li>
+            <li><a href="#">Прятки</a></li>
+            <li><a href="#">ТНТ Ран</a></li>
+            <li><a href="#">Скай Варс</a></li>
+        </ul>
+        <ul>
+            <li><a href="#">Build battle</a></li>
+            <li><a href="#">Паркур</a></li>
+            <li><a href="#">Скайблок</a></li>
+            <li><a href="#">Пейнтбол</a></li>
+            <li><a href="#">Моб арена</a></li>
+        </ul>
+        <ul>
+            <li><a href="#">Quake</a></li>
+            <li><a href="#">Deathrun</a></li>
+            <li><a href="#">Сплиф арена</a></li>
+            <li><a href="#">Лаки блоки</a></li>
+        </ul>-->
+
+        <div class="clearfix"></div>
+
+    </div>
+
+
+
+    <div class="servers">
+
+    </div>
+
+   <!-- <div class="servers">
+
+
+
+        <div class="server server-blue">
+            <div class="top" title="ТОП 2">2</div>
+            <img src="http://minecraftrating.ru/templates/theme/images/logo_big.jpg" width="50" height="50" alt="" />
+            <a href="#" class="title">MineLegacy 1.7-1.8 MiniGame</a>
+            <div class="slogan">>> BEDWARS | SKYWARS | BUILBATTLE | ЛАКИБЛОКИ | ГОЛОДНЫЕ ИГРЫ | CRAZYWALLS -> ip: [ mc.angryworld.ru ]</div>
+            <span>11 баллов</span>
+            <a href="#" class="btn btn-xs btn-danger" target="_blank"><i class="fa fa-star"></i> поднять в топ</a>
+            <a href="#" class="btn btn-xs btn-primary" target="_blank"><i class="fa fa-paint-brush"></i> выделить цветом</a>
+            &nbsp;&nbsp;
+            <span>24 голоса</span>
+            <a href="#" class="btn btn-xs btn-success" target="_blank"><i class="fa fa-thumbs-up"></i> проголосовать</a>
+            <a href="#" class="btn btn-xs btn-warning" target="_blank"><i class="fa fa-rub"></i> купить донат</a>
+
+            <div class="server-info">
+                <div class="online">
+                    <span>100 из 600</span>
+                    <span>1.8.9</span>
+                </div>
+                <button class="btn btn-lg btn-warning btn-start-game"><i class="fa fa-gamepad"></i> Играть</button>
+            </div>
+        </div>
+
+        <div class="server">
+            <div class="top" title="ТОП 3">3</div>
+            <img src="http://minecraftrating.ru/templates/theme/images/logo_big.jpg" width="50" height="50" alt="" />
+            <a href="#" class="title">MineLegacy 1.7-1.8 MiniGame</a>
+            <div class="slogan">>> BEDWARS | SKYWARS | BUILBATTLE | ЛАКИБЛОКИ | ГОЛОДНЫЕ ИГРЫ | CRAZYWALLS -> ip: [ mc.angryworld.ru ]</div>
+            <span>11 баллов</span>
+            <a href="#" class="btn btn-xs btn-danger" target="_blank"><i class="fa fa-star"></i> поднять в топ</a>
+            <a href="#" class="btn btn-xs btn-primary" target="_blank"><i class="fa fa-paint-brush"></i> выделить цветом</a>
+            &nbsp;&nbsp;
+            <span>24 голоса</span>
+            <a href="#" class="btn btn-xs btn-success" target="_blank"><i class="fa fa-thumbs-up"></i> проголосовать</a>
+            <a href="#" class="btn btn-xs btn-warning" target="_blank"><i class="fa fa-rub"></i> купить донат</a>
+
+            <div class="server-info">
+                <div class="online">
+                    <span>100 из 600</span>
+                    <span>1.8.9</span>
+                </div>
+                <button class="btn btn-lg btn-warning btn-start-game"><i class="fa fa-gamepad"></i> Играть</button>
+            </div>
+        </div>
+
+        <div class="server server-green">
+            <div class="top" title="ТОП 4">4</div>
+            <img src="http://minecraftrating.ru/templates/theme/images/logo_big.jpg" width="50" height="50" alt="" />
+            <a href="#" class="title">MineLegacy 1.7-1.8 MiniGame</a>
+            <div class="slogan">>> BEDWARS | SKYWARS | BUILBATTLE | ЛАКИБЛОКИ | ГОЛОДНЫЕ ИГРЫ | CRAZYWALLS -> ip: [ mc.angryworld.ru ]</div>
+            <span>11 баллов</span>
+            <a href="#" class="btn btn-xs btn-danger" target="_blank"><i class="fa fa-star"></i> поднять в топ</a>
+            <a href="#" class="btn btn-xs btn-primary" target="_blank"><i class="fa fa-paint-brush"></i> выделить цветом</a>
+            &nbsp;&nbsp;
+            <span>24 голоса</span>
+            <a href="#" class="btn btn-xs btn-success" target="_blank"><i class="fa fa-thumbs-up"></i> проголосовать</a>
+            <a href="#" class="btn btn-xs btn-warning" target="_blank"><i class="fa fa-rub"></i> купить донат</a>
+
+            <div class="server-info">
+                <div class="online">
+                    <span>100 из 600</span>
+                    <span>1.8.9</span>
+                </div>
+                <button class="btn btn-lg btn-warning btn-start-game"><i class="fa fa-gamepad"></i> Играть</button>
+            </div>
+        </div>
+
+        <div class="server server-yellow">
+            <div class="top" title="ТОП 5">5</div>
+            <img src="http://minecraftrating.ru/templates/theme/images/logo_big.jpg" width="50" height="50" alt="" />
+            <a href="#" class="title">MineLegacy 1.7-1.8 MiniGame</a>
+            <div class="slogan">>> BEDWARS | SKYWARS | BUILBATTLE | ЛАКИБЛОКИ | ГОЛОДНЫЕ ИГРЫ | CRAZYWALLS -> ip: [ mc.angryworld.ru ]</div>
+            <span>11 баллов</span>
+            <a href="#" class="btn btn-xs btn-danger" target="_blank"><i class="fa fa-star"></i> поднять в топ</a>
+            <a href="#" class="btn btn-xs btn-primary" target="_blank"><i class="fa fa-paint-brush"></i> выделить цветом</a>
+            &nbsp;&nbsp;
+            <span>24 голоса</span>
+            <a href="#" class="btn btn-xs btn-success" target="_blank"><i class="fa fa-thumbs-up"></i> проголосовать</a>
+            <a href="#" class="btn btn-xs btn-warning" target="_blank"><i class="fa fa-rub"></i> купить донат</a>
+
+            <div class="server-info">
+                <div class="online">
+                    <span>100 из 600</span>
+                    <span>1.8.9</span>
+                </div>
+                <button class="btn btn-lg btn-warning btn-start-game"><i class="fa fa-gamepad"></i> Играть</button>
+            </div>
+        </div>
+
+        <div class="server server-purple">
+            <div class="top" title="ТОП 6">6</div>
+            <img src="http://minecraftrating.ru/templates/theme/images/logo_big.jpg" width="50" height="50" alt="" />
+            <a href="#" class="title">MineLegacy 1.7-1.8 MiniGame</a>
+            <div class="slogan">>> BEDWARS | SKYWARS | BUILBATTLE | ЛАКИБЛОКИ | ГОЛОДНЫЕ ИГРЫ | CRAZYWALLS -> ip: [ mc.angryworld.ru ]</div>
+            <span>11 баллов</span>
+            <a href="#" class="btn btn-xs btn-danger" target="_blank"><i class="fa fa-star"></i> поднять в топ</a>
+            <a href="#" class="btn btn-xs btn-primary" target="_blank"><i class="fa fa-paint-brush"></i> выделить цветом</a>
+            &nbsp;&nbsp;
+            <span>24 голоса</span>
+            <a href="#" class="btn btn-xs btn-success" target="_blank"><i class="fa fa-thumbs-up"></i> проголосовать</a>
+            <a href="#" class="btn btn-xs btn-warning" target="_blank"><i class="fa fa-rub"></i> купить донат</a>
+
+            <div class="server-info">
+                <div class="online">
+                    <span>100 из 600</span>
+                    <span>1.8.9</span>
+                </div>
+                <button class="btn btn-lg btn-warning btn-start-game"><i class="fa fa-gamepad"></i> Играть</button>
+            </div>
+        </div>
+
+        <div class="server">
+            <div class="top" title="ТОП 7">7</div>
+            <img src="http://minecraftrating.ru/templates/theme/images/logo_big.jpg" width="50" height="50" alt="" />
+            <a href="#" class="title">MineLegacy 1.7-1.8 MiniGame</a>
+            <div class="slogan">>> BEDWARS | SKYWARS | BUILBATTLE | ЛАКИБЛОКИ | ГОЛОДНЫЕ ИГРЫ | CRAZYWALLS -> ip: [ mc.angryworld.ru ]</div>
+            <span>11 баллов</span>
+            <a href="#" class="btn btn-xs btn-danger" target="_blank"><i class="fa fa-star"></i> поднять в топ</a>
+            <a href="#" class="btn btn-xs btn-primary" target="_blank"><i class="fa fa-paint-brush"></i> выделить цветом</a>
+            &nbsp;&nbsp;
+            <span>24 голоса</span>
+            <a href="#" class="btn btn-xs btn-success" target="_blank"><i class="fa fa-thumbs-up"></i> проголосовать</a>
+            <a href="#" class="btn btn-xs btn-warning" target="_blank"><i class="fa fa-rub"></i> купить донат</a>
+
+            <div class="server-info">
+                <div class="online">
+                    <span>100 из 600</span>
+                    <span>1.8.9</span>
+                </div>
+                <button class="btn btn-lg btn-warning btn-start-game"><i class="fa fa-gamepad"></i> Играть</button>
+            </div>
+        </div>
+
+        <div class="server">
+            <div class="top" title="ТОП 8">8</div>
+            <img src="http://minecraftrating.ru/templates/theme/images/logo_big.jpg" width="50" height="50" alt="" />
+            <a href="#" class="title">MineLegacy 1.7-1.8 MiniGame</a>
+            <div class="slogan">>> BEDWARS | SKYWARS | BUILBATTLE | ЛАКИБЛОКИ | ГОЛОДНЫЕ ИГРЫ | CRAZYWALLS -> ip: [ mc.angryworld.ru ]</div>
+            <span>11 баллов</span>
+            <a href="#" class="btn btn-xs btn-danger" target="_blank"><i class="fa fa-star"></i> поднять в топ</a>
+            <a href="#" class="btn btn-xs btn-primary" target="_blank"><i class="fa fa-paint-brush"></i> выделить цветом</a>
+            &nbsp;&nbsp;
+            <span>24 голоса</span>
+            <a href="#" class="btn btn-xs btn-success" target="_blank"><i class="fa fa-thumbs-up"></i> проголосовать</a>
+            <a href="#" class="btn btn-xs btn-warning" target="_blank"><i class="fa fa-rub"></i> купить донат</a>
+
+            <div class="server-info">
+                <div class="online">
+                    <span>100 из 600</span>
+                    <span>1.8.9</span>
+                </div>
+                <button class="btn btn-lg btn-warning btn-start-game"><i class="fa fa-gamepad"></i> Играть</button>
+            </div>
+        </div>
+
+        <div class="server">
+            <div class="top" title="ТОП 9">9</div>
+            <img src="http://minecraftrating.ru/templates/theme/images/logo_big.jpg" width="50" height="50" alt="" />
+            <a href="#" class="title">MineLegacy 1.7-1.8 MiniGame</a>
+            <div class="slogan">>> BEDWARS | SKYWARS | BUILBATTLE | ЛАКИБЛОКИ | ГОЛОДНЫЕ ИГРЫ | CRAZYWALLS -> ip: [ mc.angryworld.ru ]</div>
+            <span>11 баллов</span>
+            <a href="#" class="btn btn-xs btn-danger" target="_blank"><i class="fa fa-star"></i> поднять в топ</a>
+            <a href="#" class="btn btn-xs btn-primary" target="_blank"><i class="fa fa-paint-brush"></i> выделить цветом</a>
+            &nbsp;&nbsp;
+            <span>24 голоса</span>
+            <a href="#" class="btn btn-xs btn-success" target="_blank"><i class="fa fa-thumbs-up"></i> проголосовать</a>
+            <a href="#" class="btn btn-xs btn-warning" target="_blank"><i class="fa fa-rub"></i> купить донат</a>
+
+            <div class="server-info">
+                <div class="online">
+                    <span>100 из 600</span>
+                    <span>1.8.9</span>
+                </div>
+                <button class="btn btn-lg btn-warning btn-start-game"><i class="fa fa-gamepad"></i> Играть</button>
+            </div>
+        </div>
+
+        <div class="server">
+            <div class="top" title="ТОП 10">99</div>
+            <img src="http://minecraftrating.ru/templates/theme/images/logo_big.jpg" width="50" height="50" alt="" />
+            <a href="#" class="title">MineLegacy 1.7-1.8 MiniGame</a>
+            <div class="slogan">>> BEDWARS | SKYWARS | BUILBATTLE | ЛАКИБЛОКИ | ГОЛОДНЫЕ ИГРЫ | CRAZYWALLS -> ip: [ mc.angryworld.ru ]</div>
+            <span>11 баллов</span>
+            <a href="#" class="btn btn-xs btn-danger" target="_blank"><i class="fa fa-star"></i> поднять в топ</a>
+            <a href="#" class="btn btn-xs btn-primary" target="_blank"><i class="fa fa-paint-brush"></i> выделить цветом</a>
+            &nbsp;&nbsp;
+            <span>24 голоса</span>
+            <a href="#" class="btn btn-xs btn-success" target="_blank"><i class="fa fa-thumbs-up"></i> проголосовать</a>
+            <a href="#" class="btn btn-xs btn-warning" target="_blank"><i class="fa fa-rub"></i> купить донат</a>
+
+            <div class="server-info">
+                <div class="online">
+                    <span>100 из 600</span>
+                    <span>1.8.9</span>
+                </div>
+                <button class="btn btn-lg btn-warning btn-start-game"><i class="fa fa-gamepad"></i> Играть</button>
+            </div>
+        </div>
+
+        <div class="server">
+            <div class="top" title="ТОП 11">100</div>
+            <img src="http://minecraftrating.ru/templates/theme/images/logo_big.jpg" width="50" height="50" alt="" />
+            <a href="#" class="title">MineLegacy 1.7-1.8 MiniGame</a>
+            <div class="slogan">>> BEDWARS | SKYWARS | BUILBATTLE | ЛАКИБЛОКИ | ГОЛОДНЫЕ ИГРЫ | CRAZYWALLS -> ip: [ mc.angryworld.ru ]</div>
+            <span>11 баллов</span>
+            <a href="#" class="btn btn-xs btn-danger" target="_blank"><i class="fa fa-star"></i> поднять в топ</a>
+            <a href="#" class="btn btn-xs btn-primary" target="_blank"><i class="fa fa-paint-brush"></i> выделить цветом</a>
+            &nbsp;&nbsp;
+            <span>24 голоса</span>
+            <a href="#" class="btn btn-xs btn-success" target="_blank"><i class="fa fa-thumbs-up"></i> проголосовать</a>
+            <a href="#" class="btn btn-xs btn-warning" target="_blank"><i class="fa fa-rub"></i> купить донат</a>
+
+            <div class="server-info">
+                <div class="online">
+                    <span>100 из 600</span>
+                    <span>1.8.9</span>
+                </div>
+                <button class="btn btn-lg btn-warning btn-start-game"><i class="fa fa-gamepad"></i> Играть</button>
+            </div>
+        </div>
+
+        <div class="server">
+            <div class="top" title="ТОП 12">12</div>
+            <img src="http://minecraftrating.ru/templates/theme/images/logo_big.jpg" width="50" height="50" alt="" />
+            <a href="#" class="title">MineLegacy 1.7-1.8 MiniGame</a>
+            <div class="slogan">>> BEDWARS | SKYWARS | BUILBATTLE | ЛАКИБЛОКИ | ГОЛОДНЫЕ ИГРЫ | CRAZYWALLS -> ip: [ mc.angryworld.ru ]</div>
+            <span>11 баллов</span>
+            <a href="#" class="btn btn-xs btn-danger" target="_blank"><i class="fa fa-star"></i> поднять в топ</a>
+            <a href="#" class="btn btn-xs btn-primary" target="_blank"><i class="fa fa-paint-brush"></i> выделить цветом</a>
+            &nbsp;&nbsp;
+            <span>24 голоса</span>
+            <a href="#" class="btn btn-xs btn-success" target="_blank"><i class="fa fa-thumbs-up"></i> проголосовать</a>
+            <a href="#" class="btn btn-xs btn-warning" target="_blank"><i class="fa fa-rub"></i> купить донат</a>
+
+            <div class="server-info">
+                <div class="online">
+                    <span>100 из 600</span>
+                    <span>1.8.9</span>
+                </div>
+                <button class="btn btn-lg btn-warning btn-start-game"><i class="fa fa-gamepad"></i> Играть</button>
+            </div>
+        </div>-->
+
+    </div>
+
+    <div class="progress loading-bar" style="visibility: hidden;">
+        <div class="progress-bar progress-bar-striped progress-bar-success active" style="width: 80%">
+            Загрузка ресурсов игры ...
+        </div>
+    </div>
+
+
+</div>
+
+<script src="js/theme.js" type="text/javascript"></script>
+</body>
+</html>
